@@ -26,15 +26,15 @@ public class GunProperties {
     /**
      * @since 1.1.7
      */
-    static final Supplier<Map<String ,GunProperty<?>>> ALL_CACHE_MODIFIABLE_BY_SCRIPT = Suppliers.memoize(() -> Set.of(
-            GunProperties.AMMO_SPEED,
-            GunProperties.ARMOR_IGNORE,
-            GunProperties.EFFECTIVE_RANGE,
-            GunProperties.HEADSHOT_MULTIPLIER,
-            GunProperties.KNOCKBACK,
-            GunProperties.PIERCE,
-            GunProperties.WEIGHT
-    ).stream().collect(Collectors.toMap(GunProperty::name, Function.identity())));
+    static final Supplier<Map<String ,GunProperty<? extends Number>>> ALL_CACHE_MODIFIABLE_BY_SCRIPT = Suppliers.memoize(() -> Map.of(
+            GunProperties.AMMO_SPEED.name(),GunProperties.AMMO_SPEED,
+            GunProperties.ARMOR_IGNORE.name(),GunProperties.ARMOR_IGNORE,
+            GunProperties.EFFECTIVE_RANGE.name(),GunProperties.EFFECTIVE_RANGE,
+            GunProperties.HEADSHOT_MULTIPLIER.name(),GunProperties.HEADSHOT_MULTIPLIER,
+            GunProperties.KNOCKBACK.name(),GunProperties.KNOCKBACK,
+            GunProperties.PIERCE.name(),GunProperties.PIERCE,
+            GunProperties.WEIGHT.name(),GunProperties.WEIGHT
+    ));
 
     /**
      * 返回所有属性
@@ -52,7 +52,7 @@ public class GunProperties {
      * @author ChloePrime
      * @since 1.1.7
      */
-    public static Map<String ,GunProperty<?>> allCacheModifiableByScript() {
+    public static Map<String ,GunProperty<? extends Number>> allCacheModifiableByScript() {
         return ALL_CACHE_MODIFIABLE_BY_SCRIPT.get();
     }
 

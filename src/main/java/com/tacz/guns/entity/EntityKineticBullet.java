@@ -107,43 +107,43 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
      */
     public static final String TRACER_SIZE_OVERRIDER_KEY = GunMod.MOD_ID + ":tracer_size";
 
-    private static final ExplosionData DEFAULT_EXPLOSION_DATA = new ExplosionData(false, 0, 0, false, 30, false);
+    protected static final ExplosionData DEFAULT_EXPLOSION_DATA = new ExplosionData(false, 0, 0, false, 30, false);
 
-    private ResourceLocation ammoId = DefaultAssets.EMPTY_AMMO_ID;
-    private int life = 200;
+    protected ResourceLocation ammoId = DefaultAssets.EMPTY_AMMO_ID;
+    protected int life = 200;
     @Deprecated
-    private float speed = 1;
-    private float gravity = 0;
-    private float friction = 0.01F;
-    private LinkedList<DistanceDamagePair> damageAmount = Lists.newLinkedList();
-    private float distanceAmount = 0;
-    private float knockback = 0;
-    private boolean explosion = false;
-    private boolean igniteEntity = false;
-    private boolean igniteBlock = false;
-    private int igniteEntityTime = 2;
-    private float explosionDamage = 3;
-    private float explosionRadius = 3;
-    private int explosionDelayCount = Integer.MAX_VALUE;
-    private boolean explosionKnockback = false;
-    private boolean explosionDestroyBlock = false;
-    private float damageModifier = 1;
+    protected float speed = 1;
+    protected float gravity = 0;
+    protected float friction = 0.01F;
+    protected LinkedList<DistanceDamagePair> damageAmount = Lists.newLinkedList();
+    protected float distanceAmount = 0;
+    protected float knockback = 0;
+    protected boolean explosion = false;
+    protected boolean igniteEntity = false;
+    protected boolean igniteBlock = false;
+    protected int igniteEntityTime = 2;
+    protected float explosionDamage = 3;
+    protected float explosionRadius = 3;
+    protected int explosionDelayCount = Integer.MAX_VALUE;
+    protected boolean explosionKnockback = false;
+    protected boolean explosionDestroyBlock = false;
+    protected float damageModifier = 1;
     // 穿透数
-    private int pierce = 1;
+    protected int pierce = 1;
     // 初始位置
-    private Vec3 startPos;
+    protected Vec3 startPos;
     // 曳光弹
-    private boolean isTracerAmmo;
+    protected boolean isTracerAmmo;
     // 以下几个是只对客户端有用的曳光弹数据
-    private float cameraXRot;
-    private float cameraYRot;
-    private Vector3f firstPersonRenderOffset;
+    protected float cameraXRot;
+    protected float cameraYRot;
+    protected Vector3f firstPersonRenderOffset;
     // 发射的枪械 ID
-    private ResourceLocation gunId;
+    protected ResourceLocation gunId;
     // 枪械display ID
-    private ResourceLocation gunDisplayId;
-    private float armorIgnore;
-    private float headShot;
+    protected ResourceLocation gunDisplayId;
+    protected float armorIgnore;
+    protected float headShot;
 
     public EntityKineticBullet(EntityType<? extends Projectile> type, Level worldIn) {
         super(type, worldIn);

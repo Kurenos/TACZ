@@ -64,6 +64,10 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
      */
     public abstract void shoot(ShooterDataHolder dataHolder, ItemStack gunItem, Supplier<Float> pitch, Supplier<Float> yaw, LivingEntity shooter);
 
+    public abstract void fireBullets(int bulletAmount, LivingEntity shooter, ShooterDataHolder dataHolder,
+                                     CommonGunIndex gunIndex, ItemStack itemStack, ResourceLocation gunId, ResourceLocation gunDisplayId,
+                                     float processedSpeed, float inaccuracy, float pitch, float yaw);
+
     /**
      * 开始换弹时调用
      */
@@ -437,6 +441,17 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
             }
             return false;
         }).orElse(false);
+    }
+
+    @Override
+    public boolean isValidAmmo(ItemStack gun, ItemStack ammo) {
+        if (ammo.getItem() instanceof IAmmo iAmmo) {
+            ResourceLocation gunId = getGunId(gun);
+            ResourceLocation ammoId = iAmmo.getAmmoId(ammo);
+            return TimelessAPI.getCommonGunIndex(gunId).map(gunIndex -> gunIndex.getGunData().getAmmoId().equals(ammoId)).orElse(false);
+        }
+        return false;
+
     }
 
     /**

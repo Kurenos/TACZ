@@ -58,7 +58,7 @@ public class AttachmentPropertyManager {
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(index -> {
             AttachmentCacheProperty cacheProperty = new AttachmentCacheProperty();
             // 发布事件
-            AttachmentPropertyEvent event = new AttachmentPropertyEvent(gunItem, cacheProperty);
+            AttachmentPropertyEvent event = new AttachmentPropertyEvent(gunItem, cacheProperty, shooter);
             ChangeGunPropertyEvent.internalOnAttachmentPropertyEvent(event);
             event.postEventToKubeJS(event);
             MinecraftForge.EVENT_BUS.post(event);

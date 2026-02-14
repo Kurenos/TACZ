@@ -5,6 +5,7 @@ import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ReloadState;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
@@ -116,6 +117,27 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
                         func -> func.call(CoerceJavaToLua.coerce(api)),
                         ()   -> api.shootOnce(api.isShootingNeedConsumeAmmo()));
     }
+
+    @Override
+    public void fireBullets(int bulletAmount, LivingEntity shooter, ShooterDataHolder dataHolder,
+                            CommonGunIndex gunIndex, ItemStack itemStack, ResourceLocation gunId, ResourceLocation gunDisplayId,
+                            float processedSpeed, float inaccuracy, float pitch, float yaw) {
+        GunData gunData = gunIndex.getGunData();
+        BulletData bulletData = gunIndex.getBulletData();
+        IGunOperator gunOperator = IGunOperator.fromLivingEntity(shooter);
+        net.minecraft.world.level.Level world = shooter.level();
+        ResourceLocation ammoId = gunData.getAmmoId();
+
+        for (int i = 0; i < bulletAmount; i++) {
+            boolean isTracer = bulletData.hasTracerAmmo() && gunOperator.nextBulletIsTracer(bulletData.getTracerCountInterval());
+            EntityKineticBullet bullet = new EntityKineticBullet(world, shooter, itemStack, ammoId, gunId,
+                    gunDisplayId, isTracer, gunData, bulletData);
+            bullet.applyShotgunDamageSpread(bulletAmount);
+            this.doBulletSpread(dataHolder, itemStack, shooter, bullet, i, processedSpeed,
+                    inaccuracy, pitch, yaw);
+            world.addFreshEntity(bullet);
+        }
+    };
 
     @Override
     public boolean startReload(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter){

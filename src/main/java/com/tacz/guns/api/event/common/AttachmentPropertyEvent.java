@@ -1,6 +1,7 @@
 package com.tacz.guns.api.event.common;
 
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -12,10 +13,12 @@ import net.minecraftforge.eventbus.api.Event;
 public class AttachmentPropertyEvent extends Event implements KubeJSGunEventPoster<AttachmentPropertyEvent> {
     private final ItemStack gunItem;
     private final AttachmentCacheProperty cacheProperty;
+    private final LivingEntity shooter;
 
-    public AttachmentPropertyEvent(ItemStack gunItem, AttachmentCacheProperty attachmentProperty) {
+    public AttachmentPropertyEvent(ItemStack gunItem, AttachmentCacheProperty attachmentProperty, LivingEntity shooter) {
         this.gunItem = gunItem;
         this.cacheProperty = attachmentProperty;
+        this.shooter = shooter;
     }
 
     public ItemStack getGunItem() {
@@ -24,5 +27,9 @@ public class AttachmentPropertyEvent extends Event implements KubeJSGunEventPost
 
     public AttachmentCacheProperty getCacheProperty() {
         return cacheProperty;
+    }
+
+    public LivingEntity getShooter() {
+        return shooter;
     }
 }

@@ -39,10 +39,8 @@ public interface AmmoItemDataAccessor extends IAmmo {
 
     @Override
     default boolean isAmmoOfGun(ItemStack gun, ItemStack ammo) {
-        if (gun.getItem() instanceof IGun iGun && ammo.getItem() instanceof IAmmo iAmmo) {
-            ResourceLocation gunId = iGun.getGunId(gun);
-            ResourceLocation ammoId = iAmmo.getAmmoId(ammo);
-            return TimelessAPI.getCommonGunIndex(gunId).map(gunIndex -> gunIndex.getGunData().getAmmoId().equals(ammoId)).orElse(false);
+        if (gun.getItem() instanceof IGun iGun) {
+            return iGun.isValidAmmo(gun, ammo);
         }
         return false;
     }

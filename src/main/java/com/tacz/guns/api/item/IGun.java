@@ -363,6 +363,8 @@ public interface IGun {
      */
     boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo);
 
+    boolean isValidAmmo(ItemStack gun, ItemStack ammo);
+
     /**
      * 获取 RPM
      */

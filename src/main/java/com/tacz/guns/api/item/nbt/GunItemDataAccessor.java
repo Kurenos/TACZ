@@ -297,7 +297,7 @@ public interface GunItemDataAccessor extends IGun {
     }
 
     @Override
-    default void installAttachment(@Nonnull ItemStack gun, @Nonnull ItemStack attachment) {
+    default void installAttachment(@Nonnull ItemStack gun, @Nonnull ItemStack attachment, @Nonnull AttachmentType slot) {
         if (!allowAttachment(gun, attachment)) {
             return;
         }

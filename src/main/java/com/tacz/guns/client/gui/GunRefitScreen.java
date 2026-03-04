@@ -143,7 +143,7 @@ public class GunRefitScreen extends Screen {
             ItemStack inventoryItem = inventory.getItem(i);
             IAttachment attachment = IAttachment.getIAttachmentOrNull(inventoryItem);
             IGun iGun = IGun.getIGunOrNull(player.getMainHandItem());
-            if (attachment != null && iGun != null && attachment.getType(inventoryItem) == RefitTransform.getCurrentTransformType()) {
+            if (attachment != null && iGun != null /*&& attachment.getType(inventoryItem) == RefitTransform.getCurrentTransformType()*/) {
                 if (!iGun.allowAttachment(player.getMainHandItem(), inventoryItem)) {
                     continue;
                 }

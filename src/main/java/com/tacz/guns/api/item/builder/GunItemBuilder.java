@@ -84,7 +84,7 @@ public final class GunItemBuilder {
             if(heatData) iGun.setHeatAmount(gun, 0f);
             this.attachments.forEach((type, id) -> {
                 ItemStack attachmentStack = AttachmentItemBuilder.create().setId(id).build();
-                iGun.installAttachment(gun, attachmentStack);
+                iGun.installAttachment(gun, attachmentStack, type);
             });
         }
         return gun;
@@ -109,7 +109,7 @@ public final class GunItemBuilder {
             iGun.setBulletInBarrel(gun, this.bulletInBarrel);
             this.attachments.forEach((type, id) -> {
                 ItemStack attachmentStack = AttachmentItemBuilder.create().setId(id).build();
-                iGun.installAttachment(gun, attachmentStack);
+                iGun.installAttachment(gun, attachmentStack, type);
             });
         }
         return gun;

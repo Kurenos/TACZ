@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -326,7 +328,7 @@ public interface IGun {
     /**
      * 安装配件
      */
-    void installAttachment(@Nonnull ItemStack gun, @Nonnull ItemStack attachment);
+    void installAttachment(@Nonnull ItemStack gun, @Nonnull ItemStack attachment, @Nonnull AttachmentType slot);
 
     /**
      * 卸载配件
@@ -364,6 +366,11 @@ public interface IGun {
     boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo);
 
     boolean isValidAmmo(ItemStack gun, ItemStack ammo);
+
+    @OnlyIn(Dist.CLIENT)
+    default ResourceLocation modifyTexture(ResourceLocation originalTexture) {
+        return originalTexture;
+    }
 
     /**
      * 获取 RPM

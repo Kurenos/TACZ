@@ -48,7 +48,7 @@ public class ClientMessageRefitGun {
                 if (iGun != null) {
                     if (iGun.allowAttachment(gunItem, attachmentItem)) {
                         ItemStack oldAttachmentItem = iGun.getAttachment(gunItem, message.attachmentType);
-                        iGun.installAttachment(gunItem, attachmentItem);
+                        iGun.installAttachment(gunItem, attachmentItem, message.attachmentType);
                         // 刷新配件数据
                         AttachmentPropertyManager.postChangeEvent(player, gunItem);
                         inventory.setItem(message.attachmentSlotIndex, oldAttachmentItem);

@@ -65,7 +65,7 @@ public class GunNbtFactory extends TimelessItemNbtFactory<AbstractGunItem, GunNb
                 ItemStack attachmentStack = new AttachmentNbtFactory((AttachmentItem) TimelessItemType.ATTACHMENT.getItem())
                         .setId(attachmentId)
                         .build();
-                iGun.installAttachment(stack, attachmentStack);
+                iGun.installAttachment(stack, attachmentStack, attachmentType);
             });
         }
         return stack;

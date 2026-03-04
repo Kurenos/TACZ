@@ -49,6 +49,14 @@ public class GunHudOverlay implements IGuiOverlay {
 
     private static final int MAX_AMMO_COUNT = 9999;
 
+    int getYOffset() {
+        return 0;
+    }
+
+    int getXOffset() {
+        return 20;
+    }
+
     @Override
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
         if (!RenderConfig.GUN_HUD_ENABLE.get()) {
@@ -118,7 +126,7 @@ public class GunHudOverlay implements IGuiOverlay {
         handleCacheCount(player, stack, gunData, iGun, useInventoryAmmo);
 
         // 竖线
-        graphics.fill(width - 75, height - 43, width - 74, height - 25, 0xFFFFFFFF);
+        graphics.fill(width - 75 + getXOffset(), height - 43 + getYOffset(), width - 74 + getXOffset(), height - 30 + getYOffset(), 0xFFFFFFFF);
 
         PoseStack poseStack = graphics.pose();
 
@@ -127,23 +135,23 @@ public class GunHudOverlay implements IGuiOverlay {
         // 数字
         poseStack.pushPose();
         poseStack.scale(1.5f, 1.5f, 1);
-        graphics.drawString(font, currentAmmoCountText, (width - 70) / 1.5f, (height - 43) / 1.5f, ammoCountColor, false);
+        graphics.drawString(font, currentAmmoCountText, (width - 70 + getXOffset()) / 1.5f, (height - 43 + getYOffset()) / 1.5f, ammoCountColor, false);
         poseStack.popPose();
 
         poseStack.pushPose();
         poseStack.scale(0.8f, 0.8f, 1);
-        graphics.drawString(font, inventoryAmmoCountText, (width - 68 + mc.font.width(currentAmmoCountText) * 1.5f) / 0.8f, (height - 43) / 0.8f, inventoryAmmoCountColor, false);
+        graphics.drawString(font, inventoryAmmoCountText, (width - 68 + mc.font.width(currentAmmoCountText) * 1.5f + getXOffset()) / 0.8f, (height - 43 + getYOffset()) / 0.8f, inventoryAmmoCountColor, false);
         poseStack.popPose();
 
-        // 模组版本信息
-        String minecraftVersion = SharedConstants.getCurrentVersion().getName();
-        String modVersion = ModList.get().getModFileById(GunMod.MOD_ID).versionString();
-        String debugInfo = String.format("%s-%s", minecraftVersion, modVersion);
-        // 文本
-        poseStack.pushPose();
-        poseStack.scale(0.5f, 0.5f, 1);
-        graphics.drawString(font, debugInfo, (int) ((width - 70) / 0.5f), (int) ((height - 29f) / 0.5f), 0xffaaaaaa);
-        poseStack.popPose();
+//        // 模组版本信息
+//        String minecraftVersion = SharedConstants.getCurrentVersion().getName();
+//        String modVersion = ModList.get().getModFileById(GunMod.MOD_ID).versionString();
+//        String debugInfo = String.format("%s-%s", minecraftVersion, modVersion);
+//        // 文本
+//        poseStack.pushPose();
+//        poseStack.scale(0.5f, 0.5f, 1);
+//        graphics.drawString(font, debugInfo, (int) ((width - 70) / 0.5f), (int) ((height - 29f) / 0.5f), 0xffaaaaaa);
+//        poseStack.popPose();
 
         // 图标渲染
         RenderSystem.enableDepthTest();
@@ -163,7 +171,7 @@ public class GunHudOverlay implements IGuiOverlay {
             }
         }
         // 渲染枪械图标
-        graphics.blit(hudTexture, width - 117, height - 44, 0, 0, 39, 13, 39, 13);
+        graphics.blit(hudTexture, width - 117 + getXOffset(), height - 44 + getYOffset(), 0, 0, 39, 13, 39, 13);
 
         // 渲染开火模式图标
         FireMode fireMode = IGun.getMainHandFireMode(player);
@@ -173,7 +181,7 @@ public class GunHudOverlay implements IGuiOverlay {
             default -> SEMI;
         };
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        graphics.blit(fireModeTexture, (int) (width - 68.5 + mc.font.width(currentAmmoCountText) * 1.5), height - 38, 0, 0, 10, 10, 10, 10);
+        graphics.blit(fireModeTexture, (int) (width - 68.5 + mc.font.width(currentAmmoCountText) * 1.5) + getXOffset(), height - 38 + getYOffset(), 0, 0, 10, 10, 10, 10);
     }
 
     private static void handleCacheCount(LocalPlayer player, ItemStack stack, GunData gunData, IGun iGun, boolean useInventoryAmmo) {

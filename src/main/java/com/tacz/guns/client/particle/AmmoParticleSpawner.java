@@ -4,6 +4,7 @@ package com.tacz.guns.client.particle;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.client.resource.pojo.display.ammo.AmmoParticle;
 import com.tacz.guns.entity.EntityKineticBullet;
+import com.tacz.guns.util.ColorHex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
@@ -52,6 +53,8 @@ public class AmmoParticleSpawner {
             Particle result = particleEngine.createParticle(particleOptions, bullet.getX(), bullet.getY(), bullet.getZ(), xSpeed, ySpeed, zSpeed);
             if (result != null) {
                 result.setLifetime(particle.getLifeTime());
+                float[] color = ColorHex.colorTextToRbgFloatArray(particle.getColor());
+                result.setColor(color[0], color[1], color[2]);
             }
         } else {
             RandomSource random = bullet.getRandom();
@@ -81,6 +84,8 @@ public class AmmoParticleSpawner {
             Particle result = particleEngine.createParticle(particleOptions, posX, posY, posZ, xSpeed, ySpeed, zSpeed);
             if (result != null) {
                 result.setLifetime(particle.getLifeTime());
+                float[] color = ColorHex.colorTextToRbgFloatArray(particle.getColor());
+                result.setColor(color[0], color[1], color[2]);
             }
         }
     }

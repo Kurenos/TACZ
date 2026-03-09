@@ -36,6 +36,8 @@ public class AttachmentItem extends Item implements AttachmentItemDataAccessor {
         super(new Properties().stacksTo(1));
     }
 
+    public static final String TYPE_NAME = "tacz_attachment";
+
     @Override
     @Nonnull
     @OnlyIn(Dist.CLIENT)

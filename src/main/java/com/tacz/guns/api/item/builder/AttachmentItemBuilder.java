@@ -1,10 +1,16 @@
 package com.tacz.guns.api.item.builder;
 
 import com.tacz.guns.api.DefaultAssets;
+import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IAttachment;
+import com.tacz.guns.api.item.attachment.AttachmentItemManager;
+import com.tacz.guns.api.item.gun.AbstractGunItem;
+import com.tacz.guns.api.item.gun.GunItemManager;
 import com.tacz.guns.init.ModItems;
+import com.tacz.guns.item.AttachmentItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.RegistryObject;
 
 public class AttachmentItemBuilder {
     private int count = 1;
@@ -33,7 +39,17 @@ public class AttachmentItemBuilder {
     }
 
     public ItemStack build() {
-        ItemStack attachment = new ItemStack(ModItems.ATTACHMENT.get(), this.count);
+        String itemType = TimelessAPI.getCommonAttachmentIndex(attachmentId).map(index -> index.getPojo().getItemType()).orElse(null);
+        if (itemType == null) {
+            return ItemStack.EMPTY;
+        }
+
+        RegistryObject<? extends AttachmentItem> attachmentItemRegistryObject = AttachmentItemManager.getAttachmentItemRegistryObject(itemType);
+        if (attachmentItemRegistryObject == null) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack attachment = new ItemStack(attachmentItemRegistryObject.get(), this.count);
         if (attachment.getItem() instanceof IAttachment iAttachment) {
             iAttachment.setAttachmentId(attachment, this.attachmentId);
         }

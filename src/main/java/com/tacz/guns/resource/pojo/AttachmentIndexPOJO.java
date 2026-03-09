@@ -29,6 +29,9 @@ public class AttachmentIndexPOJO {
     @SerializedName("hidden")
     private boolean hidden = false;
 
+    @SerializedName("item_type")
+    private String itemType = "tacz_attachment";
+
     public String getName() {
         return name;
     }
@@ -52,6 +55,10 @@ public class AttachmentIndexPOJO {
 
     public boolean isHidden() {
         return hidden;
+    }
+
+    public String getItemType() {
+        return itemType;
     }
 
     public int getSort() {

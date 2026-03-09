@@ -1,6 +1,7 @@
 package com.tacz.guns.init;
 
 import com.tacz.guns.GunMod;
+import com.tacz.guns.api.item.attachment.AttachmentItemManager;
 import com.tacz.guns.api.item.gun.GunItemManager;
 import com.tacz.guns.item.*;
 import net.minecraft.world.item.BlockItem;
@@ -38,6 +39,7 @@ public class ModItems {
     public static void onItemRegister(RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.ITEMS.getRegistryKey())) {
             GunItemManager.registerGunItem(ModernKineticGunItem.TYPE_NAME, MODERN_KINETIC_GUN);
+            AttachmentItemManager.registerAttachmentItem(AttachmentItem.TYPE_NAME, ATTACHMENT);
         }
     }
 }

@@ -368,7 +368,7 @@ public interface IGun {
     boolean isValidAmmo(ItemStack gun, ItemStack ammo);
 
     @OnlyIn(Dist.CLIENT)
-    default ResourceLocation modifyTexture(ResourceLocation originalTexture) {
+    default ResourceLocation modifyTexture(ResourceLocation originalTexture, ItemStack stack) {
         return originalTexture;
     }
 

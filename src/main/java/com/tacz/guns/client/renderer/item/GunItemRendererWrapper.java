@@ -119,7 +119,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
     @Override
     public ResourceLocation getTextureLocation(ItemStack stack) {
         IGun gun = IGun.getIGunOrNull(stack);
-        return gun == null ? null : gun.modifyTexture(TimelessAPI.getGunDisplay(stack).map(GunDisplayInstance::getModelTexture).orElse(null));
+        return gun == null ? null : gun.modifyTexture(TimelessAPI.getGunDisplay(stack).map(GunDisplayInstance::getModelTexture).orElse(null), stack);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
                 gunModel.setRenderHand(false);
             }
             // 调用枪械模型渲染
-            ResourceLocation texture = gun.modifyTexture(display.getModelTexture());
+            ResourceLocation texture = gun.modifyTexture(display.getModelTexture(), stack);
             RenderType renderType = RenderType.entityCutout(texture);
             gunModel.render(poseStack, stack, ctx, renderType, light, OverlayTexture.NO_OVERLAY);
             // 缓存枪口位置，为第一人称曳光弹渲染作准备
@@ -271,7 +271,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             if (transformType == GUI) {
                 poseStack.translate(0.5, 1.5, 0.5);
                 poseStack.mulPose(Axis.ZN.rotationDegrees(180));
-                VertexConsumer buffer = pBuffer.getBuffer(RenderType.entityTranslucent(gun.modifyTexture(gunIndex.getSlotTexture())));
+                VertexConsumer buffer = pBuffer.getBuffer(RenderType.entityTranslucent(gun.modifyTexture(gunIndex.getSlotTexture(), stack)));
                 SLOT_GUN_MODEL.renderToBuffer(poseStack, buffer, pPackedLight, pPackedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
                 return;
             }
@@ -286,7 +286,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
                 gunModel = lodModel.getLeft();
                 gunTexture = lodModel.getRight();
             }
-            gunTexture = gun.modifyTexture(gunTexture);
+            gunTexture = gun.modifyTexture(gunTexture, stack);
             // 移动到模型原点
             poseStack.translate(0.5, 2, 0.5);
             // 反转模型

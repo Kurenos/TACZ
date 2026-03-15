@@ -547,7 +547,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     /**
      * @return Pair<非穿甲伤害源，穿甲伤害源>
      */
-    private Pair<DamageSource, DamageSource> createDamageSources(MaybeMultipartEntity parts) {
+    protected Pair<DamageSource, DamageSource> createDamageSources(MaybeMultipartEntity parts) {
         DamageSource source1, source2;
         var hitPartType = parts.hitPart().getType();
         var directCause = hitPartType.is(PRETEND_MELEE_DAMAGE_ON) ? this.getOwner() : this;

@@ -65,7 +65,7 @@ public class EntityKillByGunEvent extends Event implements KubeJSGunEventPoster<
         return gunId;
     }
 
-    public float getBaseDamage() {
+    public float getDamage() {
         return baseDamage;
     }
 

@@ -564,7 +564,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         return Pair.of(source1, source2);
     }
 
-    private void tacAttackEntity(MaybeMultipartEntity parts, float damage, Pair<DamageSource, DamageSource> sources) {
+    protected void tacAttackEntity(MaybeMultipartEntity parts, float damage, Pair<DamageSource, DamageSource> sources) {
         var source1 = sources.getLeft();
         var source2 = sources.getRight();
         // 穿甲伤害和普通伤害的比例计算

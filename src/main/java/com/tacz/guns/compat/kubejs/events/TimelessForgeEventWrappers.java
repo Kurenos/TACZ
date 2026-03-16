@@ -125,7 +125,7 @@ public interface TimelessForgeEventWrappers {
         }
 
         default float getBaseDamage() {
-            return getForgeEvent().getBaseDamage();
+            return getForgeEvent().getDamage();
         }
 
         default DamageSource getDamageSource(GunDamageSourcePart part) {

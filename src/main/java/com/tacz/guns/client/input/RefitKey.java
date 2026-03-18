@@ -31,7 +31,7 @@ public class RefitKey {
     public static void onRefitPress(InputEvent.Key event) {
         if (event.getAction() == GLFW.GLFW_PRESS && REFIT_KEY.matches(event.getKey(), event.getScanCode())) {
             LocalPlayer player = Minecraft.getInstance().player;
-            if (player == null || player.isSpectator()) {
+            if (player == null || player.isSpectator() || !player.isCreative()) {
                 return;
             }
             if (isInGame()) {

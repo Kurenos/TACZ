@@ -52,28 +52,16 @@ public final class AttachmentDataUtils {
     }
 
     public static int getMagExtendLevel(ItemStack gunItem, GunData gunData) {
-        IGun iGun = IGun.getIGunOrNull(gunItem);
-        if (iGun == null) {
-            return 0;
-        }
-        ResourceLocation attachmentId = iGun.getAttachmentId(gunItem, AttachmentType.EXTENDED_MAG);
-        if (DefaultAssets.isEmptyAttachmentId(attachmentId)) {
-            return 0;
-        }
-        AttachmentData attachmentData = gunData.getExclusiveAttachments().get(attachmentId);
-        if (attachmentData != null) {
+        final int[] maxLevel = {0};
+
+        getAllAttachmentData(gunItem, gunData, attachmentData -> {
             int level = attachmentData.getExtendedMagLevel();
-            if (level <= 0) {
-                return 0;
-            } else return Math.min(level, 3);
-        } else {
-            return TimelessAPI.getCommonAttachmentIndex(attachmentId).map(index -> {
-                int level = index.getData().getExtendedMagLevel();
-                if (level <= 0) {
-                    return 0;
-                } else return Math.min(level, 3);
-            }).orElse(0);
-        }
+            if (level > 0) {
+                maxLevel[0] = Math.max(maxLevel[0], Math.min(level, 3));
+            }
+        });
+
+        return maxLevel[0];
     }
 
     public static int getAmmoCountWithAttachment(ItemStack gunItem, GunData gunData) {

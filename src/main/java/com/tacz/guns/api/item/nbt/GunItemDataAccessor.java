@@ -5,6 +5,7 @@ import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.api.item.attachment.UpgradableTier;
 import com.tacz.guns.api.item.builder.AttachmentItemBuilder;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.resource.GunDisplayInstance;
@@ -27,7 +28,7 @@ public interface GunItemDataAccessor extends IGun {
     String GUN_HAS_BULLET_IN_BARREL = "HasBulletInBarrel";
     String GUN_CURRENT_AMMO_COUNT_TAG = "GunCurrentAmmoCount";
     String GUN_ATTACHMENT_BASE = "Attachment";
-    String GUN_EXP_TAG = "GunLevelExp";
+    String GUN_UPGRADABLE_LEVEL_TAG = "GunUpgradableLevel";
     String GUN_DUMMY_AMMO = "DummyAmmo";
     String GUN_MAX_DUMMY_AMMO = "MaxDummyAmmo";
     String GUN_ATTACHMENT_LOCK = "AttachmentLock";
@@ -140,43 +141,29 @@ public interface GunItemDataAccessor extends IGun {
     }
 
     @Override
-    default int getLevel(ItemStack gun) {
+    default int getUpgradableLevel(ItemStack gun) {
         CompoundTag nbt = gun.getOrCreateTag();
-        if (nbt.contains(GUN_EXP_TAG, Tag.TAG_INT)) {
-            return getLevel(nbt.getInt(GUN_EXP_TAG));
+        if (nbt.contains(GUN_UPGRADABLE_LEVEL_TAG, Tag.TAG_INT)) {
+            return nbt.getInt(GUN_UPGRADABLE_LEVEL_TAG);
         }
         return 0;
     }
 
     @Override
-    default int getExp(ItemStack gun) {
+    default int getMaxUpgradableLevel() {
+        return 10;
+    }
+
+    @Override
+    default void setUpgradableLevel(ItemStack gun, int level) {
         CompoundTag nbt = gun.getOrCreateTag();
-        if (nbt.contains(GUN_EXP_TAG, Tag.TAG_INT)) {
-            return nbt.getInt(GUN_EXP_TAG);
-        }
-        return 0;
+        nbt.putInt(GUN_UPGRADABLE_LEVEL_TAG, level);
     }
 
     @Override
-    default int getExpToNextLevel(ItemStack gun) {
-        int exp = getExp(gun);
-        int level = getLevel(exp);
-        if (level >= getMaxLevel()) {
-            return 0;
-        }
-        int nextLevelExp = getExp(level + 1);
-        return nextLevelExp - exp;
-    }
-
-    @Override
-    default int getExpCurrentLevel(ItemStack gun) {
-        int exp = getExp(gun);
-        int level = getLevel(exp);
-        if (level <= 0) {
-            return exp;
-        } else {
-            return exp - getExp(level - 1);
-        }
+    default UpgradableTier getUpgradableTier(ItemStack gun) {
+        int level = getUpgradableLevel(gun);
+        return UpgradableTier.getTierByLevel(level);
     }
 
     @Override
@@ -306,7 +293,7 @@ public interface GunItemDataAccessor extends IGun {
             return;
         }
         CompoundTag nbt = gun.getOrCreateTag();
-        String key = GUN_ATTACHMENT_BASE + iAttachment.getType(attachment).name();
+        String key = GUN_ATTACHMENT_BASE + slot.name();
         CompoundTag attachmentTag = new CompoundTag();
         attachment.save(attachmentTag);
         nbt.put(key, attachmentTag);

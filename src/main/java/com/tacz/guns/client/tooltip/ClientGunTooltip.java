@@ -159,14 +159,12 @@ public class ClientGunTooltip implements ClientTooltipComponent {
 
 
         if (shouldShow(GunTooltipPart.BASE_INFO)) {
-            int expToNextLevel = iGun.getExpToNextLevel(gun);
-            int expCurrentLevel = iGun.getExpCurrentLevel(gun);
-            int level = iGun.getLevel(gun);
-            if (level >= iGun.getMaxLevel()) {
+            int level = iGun.getUpgradableLevel(gun);
+            if (level >= iGun.getMaxUpgradableLevel()) {
                 String levelText = String.format("%d (MAX)", level);
                 this.levelInfo = Component.translatable("tooltip.tacz.gun.level").append(Component.literal(levelText).withStyle(ChatFormatting.DARK_PURPLE));
             } else {
-                String levelText = String.format("%d (%.1f%%)", level, expCurrentLevel / (expToNextLevel + expCurrentLevel) * 100f);
+                String levelText = String.format("%d", level);
                 this.levelInfo = Component.translatable("tooltip.tacz.gun.level").append(Component.literal(levelText).withStyle(ChatFormatting.YELLOW));
             }
             this.maxWidth = Math.max(font.width(this.levelInfo), this.maxWidth);

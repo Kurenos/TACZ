@@ -593,19 +593,4 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
             return nextFireMode;
         });
     }
-
-    @Override
-    public int getLevel(int exp) {
-        return 0;
-    }
-
-    @Override
-    public int getExp(int level) {
-        return 0;
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 0;
-    }
 }

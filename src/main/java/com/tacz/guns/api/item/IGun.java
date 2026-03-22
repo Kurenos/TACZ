@@ -3,6 +3,7 @@ package com.tacz.guns.api.item;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.GunProperty;
 import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.api.item.attachment.UpgradableTier;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
@@ -149,56 +150,20 @@ public interface IGun {
     void setGunDisplayId(ItemStack gun, @Nullable ResourceLocation displayId);
 
     /**
-     * 获取输入的经验值对应的等级。
-     *
-     * @param exp 经验值
-     * @return 对应的等级
-     */
-    int getLevel(int exp);
-
-    /**
-     * 获取输入的等级需要至少多少的经验值。
-     *
-     * @param level 等级
-     * @return 至少需要的经验值
-     */
-    int getExp(int level);
-
-    /**
      * 返回允许的最大等级。
      *
      * @return 最大等级
      */
-    int getMaxLevel();
+    int getMaxUpgradableLevel();
 
     /**
      * 获取枪械当前等级
      */
-    int getLevel(ItemStack gun);
+    int getUpgradableLevel(ItemStack gun);
 
-    /**
-     * 获取积累的全部经验值。
-     *
-     * @param gun 输入物品
-     * @return 全部经验值
-     */
-    int getExp(ItemStack gun);
+    void setUpgradableLevel(ItemStack gun, int level);
 
-    /**
-     * 获取到下个等级需要的经验值。
-     *
-     * @param gun 输入物品
-     * @return 到下个等级需要的经验值。如果等级已经到达最大，则返回 0
-     */
-    int getExpToNextLevel(ItemStack gun);
-
-    /**
-     * 获取当前等级已经积累的经验值。
-     *
-     * @param gun 输入物品
-     * @return 当前等级已经积累的经验值
-     */
-    int getExpCurrentLevel(ItemStack gun);
+    UpgradableTier getUpgradableTier(ItemStack gun);
 
     /**
      * 获取开火模式

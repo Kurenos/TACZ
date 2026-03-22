@@ -6,6 +6,7 @@ import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.api.item.attachment.UniversalAttachmentType;
 import com.tacz.guns.client.animation.screen.RefitTransform;
 import com.tacz.guns.client.gui.components.FlatColorButton;
 import com.tacz.guns.client.gui.components.refit.*;
@@ -52,9 +53,6 @@ public class GunRefitScreen extends Screen {
         IGun iGun = IGun.getIGunOrNull(gunItem);
         if (iGun == null) {
             return -1;
-        }
-        if (!iGun.allowAttachmentType(gunItem, attachmentType)) {
-            return ICON_UV_SIZE * 6;
         }
         switch (attachmentType) {
             case GRIP -> {
@@ -197,7 +195,7 @@ public class GunRefitScreen extends Screen {
         int startX = this.width - 30;
         int startY = 10;
         Inventory inventory = player.getInventory();
-        for (AttachmentType type : AttachmentType.values()) {
+        for (AttachmentType type : UniversalAttachmentType.getUnlockedTypes(iGun.getUpgradableLevel(player.getMainHandItem()))) {
             if (type == AttachmentType.NONE) {
                 if (RefitTransform.getCurrentTransformType() == AttachmentType.NONE) {
                     TimelessAPI.getGunDisplay(player.getMainHandItem())
@@ -215,12 +213,6 @@ public class GunRefitScreen extends Screen {
             GunAttachmentSlot button = new GunAttachmentSlot(startX, startY, type, inventory.selected, inventory, b -> {
                 AttachmentType buttonType = ((GunAttachmentSlot) b).getType();
                 // 如果这个槽位不允许安装配件，则默认退回概览，不选中槽位。
-                if (!((GunAttachmentSlot) b).isAllow()) {
-                    if (RefitTransform.changeRefitScreenView(AttachmentType.NONE)) {
-                        this.init();
-                    }
-                    return;
-                }
                 // 点击的是当前选中的槽位，则退回概览
                 if (RefitTransform.getCurrentTransformType() == buttonType && buttonType != AttachmentType.NONE) {
                     if (RefitTransform.changeRefitScreenView(AttachmentType.NONE)) {

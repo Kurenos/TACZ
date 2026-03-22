@@ -547,7 +547,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     /**
      * @return Pair<非穿甲伤害源，穿甲伤害源>
      */
-    private Pair<DamageSource, DamageSource> createDamageSources(MaybeMultipartEntity parts) {
+    protected Pair<DamageSource, DamageSource> createDamageSources(MaybeMultipartEntity parts) {
         DamageSource source1, source2;
         var hitPartType = parts.hitPart().getType();
         var directCause = hitPartType.is(PRETEND_MELEE_DAMAGE_ON) ? this.getOwner() : this;
@@ -564,7 +564,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         return Pair.of(source1, source2);
     }
 
-    private void tacAttackEntity(MaybeMultipartEntity parts, float damage, Pair<DamageSource, DamageSource> sources) {
+    protected void tacAttackEntity(MaybeMultipartEntity parts, float damage, Pair<DamageSource, DamageSource> sources) {
         var source1 = sources.getLeft();
         var source2 = sources.getRight();
         // 穿甲伤害和普通伤害的比例计算

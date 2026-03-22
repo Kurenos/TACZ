@@ -111,6 +111,11 @@ public class EntityHurtByGunEvent extends Event implements KubeJSGunEventPoster<
             super(bullet, hurtEntity, attacker, gunId, gunDisplayId, amount, sources, isHeadShot, headshotMultiplier, logicalSide);
             postEventToKubeJS(this);
         }
+
+        @Override
+        public float getAmount() {
+            return baseAmount;
+        }
     }
 
     public Entity getBullet() {
@@ -135,9 +140,9 @@ public class EntityHurtByGunEvent extends Event implements KubeJSGunEventPoster<
         return gunDisplayId;
     }
 
-    @Obsolete
+
     public float getAmount() {
-        return baseAmount * headshotMultiplier;
+        return baseAmount * (isHeadShot() ? headshotMultiplier : 1);
     }
 
     public float getBaseAmount() {

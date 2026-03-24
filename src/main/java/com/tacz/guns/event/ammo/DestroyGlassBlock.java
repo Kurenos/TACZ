@@ -1,6 +1,7 @@
 package com.tacz.guns.event.ammo;
 
 import com.tacz.guns.api.event.server.AmmoHitBlockEvent;
+import com.tacz.guns.block.IBulletBreakableBlock;
 import com.tacz.guns.config.common.AmmoConfig;
 import com.tacz.guns.entity.EntityKineticBullet;
 import net.minecraft.core.BlockPos;
@@ -25,7 +26,7 @@ public class DestroyGlassBlock {
         Block stateBlock = state.getBlock();
         NoteBlockInstrument instrument = state.instrument();
         if (AmmoConfig.DESTROY_GLASS.get() && (stateBlock instanceof AbstractGlassBlock ||
-                stateBlock instanceof StainedGlassPaneBlock ||
+                stateBlock instanceof StainedGlassPaneBlock || stateBlock instanceof IBulletBreakableBlock ||
                 (stateBlock instanceof IronBarsBlock && instrument.equals(NoteBlockInstrument.HAT)))) {
             level.destroyBlock(pos, false, ammo.getOwner());
         }

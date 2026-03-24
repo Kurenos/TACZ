@@ -19,6 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
+import java.awt.*;
+
 public final class GunPropertyDiagrams {
     public static int getHidePropertyButtonYOffset() {
         int[] startYOffset = new int[]{49};
@@ -29,7 +31,14 @@ public final class GunPropertyDiagrams {
     }
 
     public static void draw(GuiGraphics graphics, Font font, int x, int y) {
-        graphics.fill(x, y, x + 288, y + getHidePropertyButtonYOffset() - 11, 0xAF222222);
+        int fillColor = new Color(69, 59, 84, 130).getRGB();
+        int borderColor = new Color(34, 30, 41, 180).getRGB();
+
+        int x2 = x + 288;
+        int y2 = y + getHidePropertyButtonYOffset() - 11;
+
+        graphics.fill(x - 1, y - 1, x2 + 1, y2 + 1, borderColor);
+        graphics.fill(x, y, x2, y2, fillColor);
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
@@ -54,7 +63,7 @@ public final class GunPropertyDiagrams {
             int barEndX = barStartX + barMaxWidth;
 
             int barBackgroundColor = 0xFF000000;
-            int barBaseColor = 0xFFFFFFFF;
+            int barBaseColor = new Color(55, 173, 219, 255).getRGB();
             int barPositivelyColor = 0xFF_55FF55;
             int barNegativeColor = 0xFF_FF5555;
 

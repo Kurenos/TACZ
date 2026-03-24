@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
+import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,17 +44,18 @@ public class FlatColorButton extends Button {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float pPartialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-        if (isSelect) {
-            graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0xAF222222, 0xAF222222);
-        } else {
-            graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0xAF222222, 0xAF222222);
-        }
+
+        int fillColor = new Color(69, 59, 84, 130).getRGB();
+        int borderColor = new Color(34, 30, 41, 180).getRGB();
+        graphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, fillColor);
+
         if (this.isHoveredOrFocused()) {
-            graphics.fillGradient(this.getX(), this.getY() + 1, this.getX() + 1, this.getY() + this.height - 1, 0xff_F3EFE0, 0xff_F3EFE0);
-            graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getY() + 1, 0xff_F3EFE0, 0xff_F3EFE0);
-            graphics.fillGradient(this.getX() + this.width - 1, this.getY() + 1, this.getX() + this.width, this.getY() + this.height - 1, 0xff_F3EFE0, 0xff_F3EFE0);
-            graphics.fillGradient(this.getX(), this.getY() + this.height - 1, this.getX() + this.width, this.getY() + this.height, 0xff_F3EFE0, 0xff_F3EFE0);
+            graphics.fill(this.getX(), this.getY() + 1, this.getX() + 1, this.getY() + this.height - 1, borderColor);
+            graphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + 1, borderColor);
+            graphics.fill(this.getX() + this.width - 1, this.getY() + 1, this.getX() + this.width, this.getY() + this.height - 1, borderColor);
+            graphics.fill(this.getX(), this.getY() + this.height - 1, this.getX() + this.width, this.getY() + this.height, borderColor);
         }
+
         this.renderScrollingString(graphics, font, 2, 0xF3EFE0);
         this.renderToolTip(graphics, minecraft.screen, mouseX, mouseY);
     }

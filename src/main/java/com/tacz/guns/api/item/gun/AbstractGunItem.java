@@ -301,7 +301,18 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
      */
     @Override
     public boolean allowAttachmentType(ItemStack gun, AttachmentType type) {
-        return true;
+        IGun iGun = IGun.getIGunOrNull(gun);
+        if (iGun != null) {
+            return TimelessAPI.getCommonGunIndex(iGun.getGunId(gun)).map(gunIndex -> {
+                List<AttachmentType> allowAttachments = gunIndex.getGunData().getAllowAttachments();
+                if (allowAttachments == null) {
+                    return false;
+                }
+                return allowAttachments.contains(type);
+            }).orElse(false);
+        } else {
+            return false;
+        }
     }
 
     /**

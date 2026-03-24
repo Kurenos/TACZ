@@ -1,14 +1,12 @@
 package com.tacz.guns.api.item.attachment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public enum UniversalAttachmentType {
     SCOPE(AttachmentType.SCOPE, -1),
-    ATTACHMENT_1(AttachmentType.MUZZLE, 2),
-    ATTACHMENT_2(AttachmentType.STOCK, 4),
+    ATTACHMENT_1(AttachmentType.MUZZLE, 0),
+    ATTACHMENT_2(AttachmentType.STOCK, 3),
     ATTACHMENT_3(AttachmentType.GRIP, 6),
     ATTACHMENT_4(AttachmentType.LASER, 8),
     ATTACHMENT_5(AttachmentType.EXTENDED_MAG, 10);
@@ -45,14 +43,21 @@ public enum UniversalAttachmentType {
         return universalType.getMappedType();
     }
 
-    public static List<AttachmentType> getUnlockedTypes(int weaponLevel) {
-        List<AttachmentType> unlocked = new ArrayList<>();
+    public static List<UniversalAttachmentType> getUnlockedTypes(int weaponLevel) {
+        List<UniversalAttachmentType> unlocked = new ArrayList<>();
         for (UniversalAttachmentType slot : UniversalAttachmentType.values()) {
             if (slot.getRequiredLevel() >= 0 && slot.isUnlocked(weaponLevel)) {
-                unlocked.add(slot.getMappedType());
+                unlocked.add(slot);
             }
         }
         return unlocked;
+    }
+
+    public static List<UniversalAttachmentType> getVisible() {
+        return LOOKUP.values().stream()
+                .filter(slot -> slot.getRequiredLevel() >= 0)
+                .sorted(Comparator.comparingInt(UniversalAttachmentType::getRequiredLevel))
+                .collect(Collectors.toList());
     }
 
     public boolean isUnlocked(int weaponLevel) {

@@ -54,9 +54,7 @@ public class GunRefitScreen extends Screen {
         if (iGun == null) {
             return -1;
         }
-        int level = iGun.getUpgradableLevel(gunItem);
-        UniversalAttachmentType universalAttachment = UniversalAttachmentType.fromAttachment(attachmentType);
-        if (!iGun.allowAttachmentType(gunItem, attachmentType) || !universalAttachment.isUnlocked(level)) {
+        if (!iGun.allowAttachmentType(gunItem, attachmentType)) {
             return ICON_UV_SIZE * 6;
         }
         switch (attachmentType) {
@@ -219,7 +217,7 @@ public class GunRefitScreen extends Screen {
             GunAttachmentSlot button = new GunAttachmentSlot(startX, startY, type, inventory.selected, inventory, b -> {
                 AttachmentType buttonType = ((GunAttachmentSlot) b).getType();
                 // 如果这个槽位不允许安装配件，则默认退回概览，不选中槽位。
-                if (!((GunAttachmentSlot) b).isAllow() || !universalType.isUnlocked(iGun.getUpgradableLevel(player.getMainHandItem()))) {
+                if (!((GunAttachmentSlot) b).isAllow()) {
                     if (RefitTransform.changeRefitScreenView(AttachmentType.NONE)) {
                         this.init();
                     }

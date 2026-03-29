@@ -23,7 +23,7 @@ import java.awt.*;
 
 public final class GunPropertyDiagrams {
     public static int getHidePropertyButtonYOffset() {
-        int[] startYOffset = new int[]{49};
+        int[] startYOffset = new int[]{55};
         AttachmentPropertyManager.getModifiers().forEach((key, value) -> {
             startYOffset[0] += value.getDiagramsDataSize() * 10;
         });
@@ -34,8 +34,8 @@ public final class GunPropertyDiagrams {
         int fillColor = new Color(69, 59, 84, 130).getRGB();
         int borderColor = new Color(34, 30, 41, 180).getRGB();
 
-        int x2 = x + 288;
-        int y2 = y + getHidePropertyButtonYOffset() - 11;
+        int x2 = x + 310;
+        int y2 = y + getHidePropertyButtonYOffset() - 9;
 
         graphics.fill(x - 1, y - 1, x2 + 1, y2 + 1, borderColor);
         graphics.fill(x, y, x2, y2, fillColor);
@@ -58,7 +58,7 @@ public final class GunPropertyDiagrams {
             GunData gunData = index.getGunData();
             FireMode fireMode = iGun.getFireMode(gunItem);
 
-            int barStartX = x + 83;
+            int barStartX = x + 130;
             int barMaxWidth = 120;
             int barEndX = barStartX + barMaxWidth;
 
@@ -69,7 +69,7 @@ public final class GunPropertyDiagrams {
 
             int fontColor = 0xCCCCCC;
             int nameTextStartX = x + 5;
-            int valueTextStartX = x + 210;
+            int valueTextStartX = x + 260;
 
             int[] yOffset = new int[]{y + 5};
 

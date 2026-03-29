@@ -93,7 +93,7 @@ public class GunRefitScreen extends Screen {
         this.addInventoryAttachmentButtons();
         // 添加属性图隐藏按钮
         if (HIDE_GUN_PROPERTY_DIAGRAMS) {
-            this.addRenderableWidget(new FlatColorButton(11, 11, 288, 16,
+            this.addRenderableWidget(new FlatColorButton(11, 11, 310, 16,
                     Component.translatable("gui.tacz.gun_refit.property_diagrams.show"), b -> switchHideButton()));
         } else {
             this.addRenderableWidget(new FlatColorButton(14, 14, 12, 12, Component.literal("S"), b -> {
@@ -105,7 +105,7 @@ public class GunRefitScreen extends Screen {
                 }
             }).setTooltips(Component.translatable("gui.tacz.gun_refit.property_diagrams.fire_mode.switch")));
             int buttonYOffset = GunPropertyDiagrams.getHidePropertyButtonYOffset();
-            this.addRenderableWidget(new FlatColorButton(11, buttonYOffset, 288, 12,
+            this.addRenderableWidget(new FlatColorButton(11, buttonYOffset + 5, 310, 12,
                     Component.translatable("gui.tacz.gun_refit.property_diagrams.hide"), b -> switchHideButton()));
         }
     }

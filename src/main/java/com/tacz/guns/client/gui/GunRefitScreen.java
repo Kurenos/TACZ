@@ -195,7 +195,7 @@ public class GunRefitScreen extends Screen {
         if (iGun == null) {
             return;
         }
-        int startX = this.width - 60;
+        int startX = this.width - 30 - SLOT_SIZE * 5;
         int startY = 10;
         Inventory inventory = player.getInventory();
         for (UniversalAttachmentType universalType : UniversalAttachmentType.getVisible()) {
@@ -247,7 +247,7 @@ public class GunRefitScreen extends Screen {
                             ClientMessageUnloadAttachment message = new ClientMessageUnloadAttachment(inventory.selected, RefitTransform.getCurrentTransformType());
                             NetworkHandler.CHANNEL.sendToServer(message);
                         } else {
-                            player.sendSystemMessage(Component.translatable("gui.tacz.gun_refit.unload.no_space"));
+//                            player.sendSystemMessage(Component.translatable("gui.tacz.gun_refit.unload.no_space"));
                         }
                     }
                 });
@@ -268,7 +268,7 @@ public class GunRefitScreen extends Screen {
                 }
             }
             this.addRenderableWidget(button);
-            startX = startX - SLOT_SIZE;
+            startX = startX + SLOT_SIZE;
         }
     }
 

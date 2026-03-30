@@ -66,7 +66,7 @@ public class ClientHitMark {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && player.equals(attacker)) {
             RenderCrosshairEvent.markKillTimestamp();
-            KillAmountOverlay.markTimestamp();
+//            KillAmountOverlay.markTimestamp(event.getKilledEntity());
             TimelessAPI.getGunDisplay(event.getGunDisplayId(), event.getGunId()).ifPresent(index -> SoundPlayManager.playKillSound(player, index));
             if (event.isHeadShot()) {
                 RenderCrosshairEvent.markHeadShotTimestamp();

@@ -48,8 +48,8 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
         this.attachmentId = tooltip.getAttachmentId();
         this.attachment = tooltip.getAttachmentItem();
         this.addText(tooltip.getType());
-        this.getShowGuns();
-        this.addPackInfo();
+//        this.getShowGuns();
+//        this.addPackInfo();
     }
 
     private void addPackInfo() {

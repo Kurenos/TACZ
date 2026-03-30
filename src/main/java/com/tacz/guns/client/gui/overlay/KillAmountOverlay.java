@@ -3,15 +3,18 @@ package com.tacz.guns.client.gui.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
+import com.tacz.guns.api.event.client.KillingSpreeMarkEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.config.client.RenderConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.common.MinecraftForge;
 
 public class KillAmountOverlay implements IGuiOverlay {
     private static long killTimestamp = -1L;
@@ -68,12 +71,13 @@ public class KillAmountOverlay implements IGuiOverlay {
         RenderSystem.disableBlend();
     }
 
-    public static void markTimestamp() {
+    public static void markTimestamp(LivingEntity killedEntity) {
         int timeout = (int) (RenderConfig.KILL_AMOUNT_DURATION_SECOND.get() * 1000);
         if (System.currentTimeMillis() - killTimestamp > timeout) {
             killAmount = 0;
         }
         killTimestamp = System.currentTimeMillis();
         killAmount += 1;
+        MinecraftForge.EVENT_BUS.post(new KillingSpreeMarkEvent(killedEntity, killAmount));
     }
 }

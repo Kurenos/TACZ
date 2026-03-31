@@ -1,18 +1,31 @@
 package com.tacz.guns.client.gui;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Axis;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.api.client.animation.statemachine.AnimationStateMachine;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
+import com.tacz.guns.api.event.client.GunRefitScreenRenderEvent;
 import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.attachment.UniversalAttachmentType;
 import com.tacz.guns.client.animation.screen.RefitTransform;
+import com.tacz.guns.client.event.FirstPersonRenderEvent;
+import com.tacz.guns.client.event.FirstPersonRenderGunEvent;
 import com.tacz.guns.client.gui.components.FlatColorButton;
 import com.tacz.guns.client.gui.components.refit.*;
+import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.client.sound.SoundPlayManager;
+import com.tacz.guns.compat.oculus.OculusCompat;
 import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.ClientMessageLaserColor;
 import com.tacz.guns.network.message.ClientMessageRefitGun;
@@ -21,14 +34,29 @@ import com.tacz.guns.sound.SoundManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LightLayer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class GunRefitScreen extends Screen {
@@ -101,17 +129,22 @@ public class GunRefitScreen extends Screen {
                 if (player == null || player.isSpectator()) return;
                 if (IGun.mainHandHoldGun(player)) {
                     IClientPlayerGunOperator.fromLocalPlayer(player).fireSelect();
+                    int select = player.getInventory().selected;
                     this.init();
+                    player.getInventory().selected = select;
                 }
             }).setTooltips(Component.translatable("gui.tacz.gun_refit.property_diagrams.fire_mode.switch")));
             int buttonYOffset = GunPropertyDiagrams.getHidePropertyButtonYOffset();
             this.addRenderableWidget(new FlatColorButton(11, buttonYOffset + 5, 330, 12,
                     Component.translatable("gui.tacz.gun_refit.property_diagrams.hide"), b -> switchHideButton()));
         }
+        this.addGunsButtons();
     }
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float pPartialTick) {
+        MinecraftForge.EVENT_BUS.post(new GunRefitScreenRenderEvent.Pre(graphics, pPartialTick));
+//        renderGunInGui(FirstPersonRenderEvent.tt, graphics, pPartialTick, Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight(), 1);
         super.render(graphics, mouseX, mouseY, pPartialTick);
 
         if (!HIDE_GUN_PROPERTY_DIAGRAMS) {
@@ -122,6 +155,104 @@ public class GunRefitScreen extends Screen {
                 .renderTooltip(component -> graphics.renderComponentTooltip(font, component, mouseX, mouseY)));
         this.renderables.stream().filter(w -> w instanceof IStackTooltip).forEach(w -> ((IStackTooltip) w)
                 .renderTooltip(stack -> graphics.renderTooltip(font, stack, mouseX, mouseY)));
+
+        MinecraftForge.EVENT_BUS.post(new GunRefitScreenRenderEvent.Post(graphics, pPartialTick));
+    }
+
+    public static void renderGunInGui(TextureTarget renderTarget, GuiGraphics graphics, float pticks, float screenWidth, float screenHeight, float scale) {
+
+        LocalPlayer player = Minecraft.getInstance().player;
+        ClientLevel level = Minecraft.getInstance().level;
+
+        if (player == null || level == null) return;
+
+
+        RenderTarget mainRenderTarget = Minecraft.getInstance().getMainRenderTarget();
+
+        VertexSorting cachedVertexSorting = RenderSystem.getVertexSorting();
+        Matrix4f cachedProjectionMatrix = new Matrix4f(RenderSystem.getProjectionMatrix());
+        Matrix4f cachedModelviewMatrix = new Matrix4f(RenderSystem.getModelViewMatrix());
+
+        RenderSystem.getModelViewMatrix().set(new Matrix4f());
+        RenderSystem.setProjectionMatrix(getProjectionMatrix(), VertexSorting.DISTANCE_TO_ORIGIN);
+
+
+        PoseStack matrices = new PoseStack();
+        matrices.translate(0,-0.55,-0.33);
+        matrices.mulPose(Axis.YP.rotationDegrees(180));
+        matrices.scale(0.1f * scale,0.1f * scale,0.1f * scale);
+
+
+        renderTarget.bindWrite(false);
+        RenderSystem.depthMask(true);
+        RenderSystem.enableCull();
+        RenderSystem.enableBlend();
+
+
+        BufferBuilder builder = Tesselator.getInstance().getBuilder();
+
+        RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
+
+        Lighting.setupLevel(new Matrix4f());
+
+        ItemStack stack = player.getMainHandItem();
+        int blockLight = level.getBrightness(LightLayer.BLOCK, player.blockPosition());
+        int skyLight = level.getBrightness(LightLayer.SKY, player.blockPosition());
+        if (IClientItemExtensions.of(stack.getItem()).getCustomRenderer() instanceof AnimateGeoItemRenderer<?, ?> renderer) {
+            renderer.renderFirstPerson(player, stack, ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, graphics.pose(), graphics.bufferSource(), LightTexture.pack(blockLight, skyLight), pticks);
+            graphics.bufferSource().endLastBatch();
+        }
+
+        RenderSystem.setProjectionMatrix(cachedProjectionMatrix, cachedVertexSorting);
+        RenderSystem.getModelViewMatrix().set(cachedModelviewMatrix);
+
+
+        //eto pizdec
+        Lighting.setupFor3DItems();
+        mainRenderTarget.bindWrite(false);
+        RenderSystem.setShaderTexture(0, renderTarget.getColorTextureId());
+        matrices = graphics.pose();
+        matrices.pushPose();
+        RenderSystem.disableCull();
+        matrices.translate(0,screenHeight,0);
+        matrices.scale(1,-1,1);
+
+        blitWithPoseStack(matrices, 0, 0, 0, 0, screenWidth, screenHeight, screenWidth, screenHeight, 1);
+        matrices.popPose();
+
+        renderTarget.clear(Minecraft.ON_OSX);
+        RenderSystem.enableCull();
+    }
+
+    public static void blitWithPoseStack(PoseStack matrices, float x, float y, float texPosX, float texPosY, float width, float height, float texWidth, float texHeight, float alpha)
+    {
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        BufferBuilder vertex = Tesselator.getInstance().getBuilder();
+        float u1 = texPosX / texWidth;
+        float u2 = (texPosX + width) / texWidth;
+        float v1 = texPosY / texHeight;
+        float v2 = (texPosY + height) / texHeight;
+        Matrix4f m = matrices.last().pose();
+        if(vertex.building()) vertex.endOrDiscardIfEmpty();
+        vertex.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        vertex.vertex(m, x, y, 0).color(1, 1, 1, alpha).uv(u1, v1).endVertex();
+        vertex.vertex(m, x, y + height, 0).color(1, 1, 1, alpha).uv(u1, v2).endVertex();
+        vertex.vertex(m, x + width, y + height, 0).color(1, 1, 1, alpha).uv(u2, v2).endVertex();
+        vertex.vertex(m, x + width, y, 0).color(1, 1, 1, alpha).uv(u2, v1).endVertex();
+        BufferUploader.drawWithShader(vertex.end());
+        RenderSystem.disableBlend();
+    }
+
+    public static Matrix4f getProjectionMatrix(){
+        Matrix4f projection = new Matrix4f().perspective(
+                (float)(70 * (float) (Math.PI / 180.0)),
+                (float)Minecraft.getInstance().getWindow().getWidth() / (float)Minecraft.getInstance().getWindow().getHeight(),
+                0.001F,
+                ForgeHooksClient.getGuiFarPlane()
+        );
+        return projection;
     }
 
     @Override
@@ -186,6 +317,30 @@ public class GunRefitScreen extends Screen {
         }
     }
 
+    private void addGunsButtons() {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        ArrayList<Integer> gunInventoryIndeces = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            if (player.getInventory().getItem(i).getItem() instanceof IGun) gunInventoryIndeces.add(i);
+            if (!(player.getInventory().getSelected().getItem() instanceof IGun)) player.getInventory().selected = i;
+        }
+
+        int slotSize = 26;
+        int x = Math.round(this.width / 2f - ((slotSize + 3) * gunInventoryIndeces.size() / 2f));
+        int y = this.height - slotSize - 10;
+        for (int index : gunInventoryIndeces) {
+            GunSelectButton button = new GunSelectButton(x, y, slotSize, slotSize, index, b -> {
+
+                player.getInventory().selected = index;
+                RefitTransform.changeRefitScreenView(AttachmentType.NONE);
+                this.init();
+            });
+            this.addRenderableWidget(button);
+            x += slotSize + 3;
+        }
+    }
+
     private void addAttachmentTypeButtons() {
         LocalPlayer player = getMinecraft().player;
         if (player == null) {
@@ -219,20 +374,26 @@ public class GunRefitScreen extends Screen {
                 // 如果这个槽位不允许安装配件，则默认退回概览，不选中槽位。
                 if (!((GunAttachmentSlot) b).isAllow()) {
                     if (RefitTransform.changeRefitScreenView(AttachmentType.NONE)) {
+                        int select = player.getInventory().selected;
                         this.init();
+                        player.getInventory().selected = select;
                     }
                     return;
                 }
                 // 点击的是当前选中的槽位，则退回概览
                 if (RefitTransform.getCurrentTransformType() == buttonType && buttonType != AttachmentType.NONE) {
                     if (RefitTransform.changeRefitScreenView(AttachmentType.NONE)) {
+                        int select = player.getInventory().selected;
                         this.init();
+                        player.getInventory().selected = select;
                     }
                     return;
                 }
                 // 切换选中的槽位。
                 if (RefitTransform.changeRefitScreenView(buttonType)) {
+                    int select = player.getInventory().selected;
                     this.init();
+                    player.getInventory().selected = select;
                 }
             });
             if (RefitTransform.getCurrentTransformType() == type) {
@@ -287,7 +448,11 @@ public class GunRefitScreen extends Screen {
     }
 
     private void switchHideButton() {
+        Player player = Minecraft.getInstance().player;
         HIDE_GUN_PROPERTY_DIAGRAMS = !HIDE_GUN_PROPERTY_DIAGRAMS;
+        if (player == null) return;
+        int select = player.getInventory().selected;
         this.init();
+        player.getInventory().selected = select;
     }
 }

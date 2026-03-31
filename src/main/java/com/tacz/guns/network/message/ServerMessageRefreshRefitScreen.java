@@ -31,7 +31,9 @@ public class ServerMessageRefreshRefitScreen {
     private static void updateScreen() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && Minecraft.getInstance().screen instanceof GunRefitScreen screen) {
+            int select = player.getInventory().selected;
             screen.init();
+            player.getInventory().selected = select;
             // 刷新配件数据，客户端的
             AttachmentPropertyManager.postChangeEvent(player, player.getMainHandItem());
         }

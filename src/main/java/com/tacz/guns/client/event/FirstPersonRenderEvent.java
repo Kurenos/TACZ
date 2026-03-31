@@ -1,9 +1,13 @@
 package com.tacz.guns.client.event;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.Window;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.animation.statemachine.AnimationStateMachine;
 import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.item.IGun;
+import com.tacz.guns.client.gui.GunRefitScreen;
 import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
 import com.tacz.guns.compat.oculus.OculusCompat;
 import net.minecraft.client.Minecraft;
@@ -14,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -21,8 +26,32 @@ import net.minecraftforge.fml.common.Mod;
 public class FirstPersonRenderEvent {
     private static AnimationStateMachine<?> lastStateMachine = null;
 
+
+    public static TextureTarget tt;
+
+    @SubscribeEvent
+    public static void tickEvent(TickEvent.ClientTickEvent tickEvent){
+        if (tickEvent.phase != TickEvent.Phase.START) return;
+        if (tt != null){
+            Window window = Minecraft.getInstance().getWindow();
+            if (tt.width != window.getWidth() || tt.height != window.getHeight()){
+                tt.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
+            }
+        } else tt = new TextureTarget(1, 1, true, Minecraft.ON_OSX);
+
+    }
+
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
+
+//        RenderTarget mainRenderTarget = Minecraft.getInstance().getMainRenderTarget();
+//        boolean refit = Minecraft.getInstance().screen instanceof GunRefitScreen;
+//        if (refit) {
+//            tt.copyDepthFrom(mainRenderTarget);
+//            tt.bindWrite(Minecraft.ON_OSX);
+//        }
+//        if (Minecraft.getInstance().screen instanceof GunRefitScreen) return;
+
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
@@ -68,5 +97,7 @@ public class FirstPersonRenderEvent {
                     event.getPackedLight(), event.getPartialTick());
             event.setCanceled(true);
         }
+
+//        if (refit) mainRenderTarget.bindWrite(Minecraft.ON_OSX);
     }
 }

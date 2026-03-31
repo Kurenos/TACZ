@@ -107,16 +107,16 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
             font.drawInBatch(component, pX, yOffset, 0xffaa00, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0);
             yOffset += 10;
         }
-        if (!Screen.hasShiftDown()) {
-            font.drawInBatch(tips, pX, pY + 5 + this.components.size() * 10, 0x9e9e9e, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0);
-            yOffset += 10;
-        } else {
-            yOffset += (showGuns.size() - 1) / 16 * 18 + 32;
-        }
-        // 枪包名
-        if (packInfo != null) {
-            font.drawInBatch(this.packInfo, pX, yOffset + 8, 0xffffff, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0);
-        }
+//        if (!Screen.hasShiftDown()) {
+//            font.drawInBatch(tips, pX, pY + 5 + this.components.size() * 10, 0x9e9e9e, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0);
+//            yOffset += 10;
+//        } else {
+//            yOffset += (showGuns.size() - 1) / 16 * 18 + 32;
+//        }
+//        // 枪包名
+//        if (packInfo != null) {
+//            font.drawInBatch(this.packInfo, pX, yOffset + 8, 0xffffff, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0);
+//        }
     }
 
     @Override
@@ -138,11 +138,12 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
     }
 
     private void getShowGuns() {
-        try {
-            this.showGuns = CACHE.get(attachmentId, () -> getAllAllowGuns(Lists.newArrayList(), attachmentId));
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        this.showGuns = List.of();
+//        try {
+//            this.showGuns = CACHE.get(attachmentId, () -> getAllAllowGuns(Lists.newArrayList(), attachmentId));
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static String rgbToHex(int rgb) {

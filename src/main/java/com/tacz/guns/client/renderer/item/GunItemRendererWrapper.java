@@ -14,6 +14,7 @@ import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
 import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.event.CameraSetupEvent;
 import com.tacz.guns.client.event.FirstPersonRenderGunEvent;
+import com.tacz.guns.client.gui.GunRefitScreen;
 import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.model.SlotModel;
 import com.tacz.guns.client.model.bedrock.BedrockPart;

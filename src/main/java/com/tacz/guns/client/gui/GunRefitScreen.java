@@ -105,7 +105,7 @@ public class GunRefitScreen extends Screen {
                 }
             }).setTooltips(Component.translatable("gui.tacz.gun_refit.property_diagrams.fire_mode.switch")));
             int buttonYOffset = GunPropertyDiagrams.getHidePropertyButtonYOffset();
-            this.addRenderableWidget(new FlatColorButton(11, buttonYOffset + 5, 310, 12,
+            this.addRenderableWidget(new FlatColorButton(11, buttonYOffset + 5, 330, 12,
                     Component.translatable("gui.tacz.gun_refit.property_diagrams.hide"), b -> switchHideButton()));
         }
     }

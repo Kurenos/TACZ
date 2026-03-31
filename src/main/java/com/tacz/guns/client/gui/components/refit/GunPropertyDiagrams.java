@@ -34,7 +34,7 @@ public final class GunPropertyDiagrams {
         int fillColor = new Color(69, 59, 84, 130).getRGB();
         int borderColor = new Color(34, 30, 41, 180).getRGB();
 
-        int x2 = x + 310;
+        int x2 = x + 330;
         int y2 = y + getHidePropertyButtonYOffset() - 9;
 
         graphics.fill(x - 1, y - 1, x2 + 1, y2 + 1, borderColor);
@@ -58,7 +58,7 @@ public final class GunPropertyDiagrams {
             GunData gunData = index.getGunData();
             FireMode fireMode = iGun.getFireMode(gunItem);
 
-            int barStartX = x + 130;
+            int barStartX = x + 120;
             int barMaxWidth = 120;
             int barEndX = barStartX + barMaxWidth;
 

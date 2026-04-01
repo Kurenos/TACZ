@@ -69,7 +69,7 @@ public final class GunPropertyDiagrams {
 
             int fontColor = 0xCCCCCC;
             int nameTextStartX = x + 5;
-            int valueTextStartX = x + 260;
+            int valueTextStartX = x + 250;
 
             int[] yOffset = new int[]{y + 5};
 

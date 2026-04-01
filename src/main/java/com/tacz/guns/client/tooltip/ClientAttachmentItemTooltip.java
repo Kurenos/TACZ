@@ -121,20 +121,20 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
 
     @Override
     public void renderImage(Font font, int mouseX, int mouseY, GuiGraphics gui) {
-        if (!Screen.hasShiftDown()) {
-            return;
-        }
-        int minY = components.size() * 10 + 3;
-        int maxX = getWidth(font);
-        gui.fill(mouseX, mouseY + minY, mouseX + maxX, mouseY + minY + 11, 0x8F00b0ff);
-        gui.drawString(font, support, mouseX + 2, mouseY + minY + 2, 0xe3f2fd);
-
-        for (int i = 0; i < showGuns.size(); i++) {
-            ItemStack stack = showGuns.get(i);
-            int x = i % 16 * 16 + 2;
-            int y = i / 16 * 18 + minY + 15;
-            gui.renderItem(stack, mouseX + x, mouseY + y);
-        }
+//        if (!Screen.hasShiftDown()) {
+//            return;
+//        }
+//        int minY = components.size() * 10 + 3;
+//        int maxX = getWidth(font);
+//        gui.fill(mouseX, mouseY + minY, mouseX + maxX, mouseY + minY + 11, 0x8F00b0ff);
+//        gui.drawString(font, support, mouseX + 2, mouseY + minY + 2, 0xe3f2fd);
+//
+//        for (int i = 0; i < showGuns.size(); i++) {
+//            ItemStack stack = showGuns.get(i);
+//            int x = i % 16 * 16 + 2;
+//            int y = i / 16 * 18 + minY + 15;
+//            gui.renderItem(stack, mouseX + x, mouseY + y);
+//        }
     }
 
     private void getShowGuns() {

@@ -1,5 +1,6 @@
 package com.tacz.guns.client.init;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.other.ThirdPersonManager;
 import com.tacz.guns.client.gui.overlay.GunHudOverlay;
@@ -95,6 +96,9 @@ public class ClientSetupEvent {
 
         // 与 Controllable 的兼容
         event.enqueueWork(ControllableCompat::init);
+
+        Minecraft minecraft = Minecraft.getInstance();
+        RenderSystem.recordRenderCall(() -> minecraft.getMainRenderTarget().enableStencil());
 
 		// 与 Accelerated Rendering 的兼容
 		event.enqueueWork(ARCompat::init);

@@ -114,6 +114,14 @@ public class GunRefitScreen extends Screen {
 
     @Override
     public void init() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
+        for (int i = 0; i < 9; i++) {
+            if (player.getInventory().getItem(i).getItem() instanceof IGun && !(player.getInventory().getSelected().getItem() instanceof IGun)) {
+                player.getInventory().selected = i;
+                break;
+            }
+        }
         this.clearWidgets();
         // 添加配件槽位
         this.addAttachmentTypeButtons();
@@ -125,8 +133,7 @@ public class GunRefitScreen extends Screen {
                     Component.translatable("gui.tacz.gun_refit.property_diagrams.show"), b -> switchHideButton()));
         } else {
             this.addRenderableWidget(new FlatColorButton(14, 14, 12, 12, Component.literal("S"), b -> {
-                LocalPlayer player = Minecraft.getInstance().player;
-                if (player == null || player.isSpectator()) return;
+                if (player.isSpectator()) return;
                 if (IGun.mainHandHoldGun(player)) {
                     IClientPlayerGunOperator.fromLocalPlayer(player).fireSelect();
                     int select = player.getInventory().selected;
@@ -139,6 +146,7 @@ public class GunRefitScreen extends Screen {
                     Component.translatable("gui.tacz.gun_refit.property_diagrams.hide"), b -> switchHideButton()));
         }
         this.addGunsButtons();
+        this.addSwitchButtons();
     }
 
     @Override
@@ -339,6 +347,18 @@ public class GunRefitScreen extends Screen {
             this.addRenderableWidget(button);
             x += slotSize + 3;
         }
+    }
+
+    private void addSwitchButtons() {
+        SwitchPageButton left = createSwitchButton(true);
+        if (left != null) this.addRenderableWidget(left);
+
+        SwitchPageButton right = createSwitchButton(false);
+        if (right != null) this.addRenderableWidget(right);
+    }
+
+    private SwitchPageButton createSwitchButton(boolean left) {
+        return null;
     }
 
     private void addAttachmentTypeButtons() {

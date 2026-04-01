@@ -1,6 +1,7 @@
 package com.tacz.guns.client.event;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.tacz.guns.api.entity.ICustomHeadEntity;
 import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.config.util.HeadShotAABBConfigRead;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,8 @@ public class RenderHeadShotAABB {
             return;
         }
         AABB aabb = HeadShotAABBConfigRead.getAABB(entityId);
-        if (aabb == null) {
+        if (entity instanceof ICustomHeadEntity hed) aabb = hed.getHeadshotAABB();
+        else if (aabb == null) {
             float width = entity.getBbWidth();
             float eyeHeight = entity.getEyeHeight();
             // 扩张 0.01，避免和原版显示重合

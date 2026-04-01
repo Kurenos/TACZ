@@ -1,5 +1,6 @@
 package com.tacz.guns.util;
 
+import com.tacz.guns.api.entity.ICustomHeadEntity;
 import com.tacz.guns.config.util.HeadShotAABBConfigRead;
 import com.tacz.guns.entity.EntityKineticBullet;
 import net.minecraft.resources.ResourceLocation;
@@ -89,6 +90,7 @@ public class EntityUtil {
         // 有配置的调用配置
         if (entityId != null) {
             AABB aabb = HeadShotAABBConfigRead.getAABB(entityId);
+            if (entity instanceof ICustomHeadEntity hed) aabb = hed.getHeadshotAABB();
             if (aabb != null) {
                 return new EntityKineticBullet.EntityResult(entity, hitPos, aabb.contains(hitBoxPos));
             }

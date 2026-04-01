@@ -76,10 +76,10 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
 
     @Override
     public int getHeight() {
-        if (!Screen.hasShiftDown()) {
-            return components.size() * 10 + 28;
-        }
-        return (showGuns.size() - 1) / 16 * 18 + 50 + components.size() * 10;
+//        if (!Screen.hasShiftDown()) {
+            return components.size() * 10;
+//        }
+//        return (showGuns.size() - 1) / 16 * 18 + 50 + components.size() * 10;
     }
 
     @Override
@@ -89,15 +89,15 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
             width[0] = Math.max(width[0], font.width(packInfo) + 4);
         }
         components.forEach(c -> width[0] = Math.max(width[0], font.width(c)));
-        if (!Screen.hasShiftDown()) {
+//        if (!Screen.hasShiftDown()) {
             return Math.max(width[0], font.width(tips) + 4);
-        } else {
-            width[0] = Math.max(width[0], font.width(support) + 4);
-        }
-        if (showGuns.size() > 15) {
-            return Math.max(width[0], 260);
-        }
-        return Math.max(width[0], showGuns.size() * 16 + 4);
+//        } else {
+//            width[0] = Math.max(width[0], font.width(support) + 4);
+//        }
+//        if (showGuns.size() > 15) {
+//            return Math.max(width[0], 260);
+//        }
+//        return Math.max(width[0], showGuns.size() * 16 + 4);
     }
 
     @Override

@@ -53,8 +53,17 @@ public class AmmoParticleSpawner {
             Particle result = particleEngine.createParticle(particleOptions, bullet.getX(), bullet.getY(), bullet.getZ(), xSpeed, ySpeed, zSpeed);
             if (result != null) {
                 result.setLifetime(particle.getLifeTime());
-                float[] color = ColorHex.colorTextToRbgFloatArray(particle.getColor());
-                result.setColor(color[0], color[1], color[2]);
+                int colorOverride = bullet.getParticleColorOverride();
+                if (colorOverride != -1) {
+                    float r = (colorOverride >> 16 & 0xff) / 255.0F;
+                    float g = (colorOverride >> 8 & 0xff) / 255.0F;
+                    float b = (colorOverride & 0xff) / 255.0F;
+                    result.setColor(r, g, b);
+                }
+                else if (!particle.getColor().isEmpty()){
+                    float[] color = ColorHex.colorTextToRbgFloatArray(particle.getColor());
+                    result.setColor(color[0], color[1], color[2]);
+                }
             }
         } else {
             RandomSource random = bullet.getRandom();
@@ -84,8 +93,17 @@ public class AmmoParticleSpawner {
             Particle result = particleEngine.createParticle(particleOptions, posX, posY, posZ, xSpeed, ySpeed, zSpeed);
             if (result != null) {
                 result.setLifetime(particle.getLifeTime());
-                float[] color = ColorHex.colorTextToRbgFloatArray(particle.getColor());
-                result.setColor(color[0], color[1], color[2]);
+                int colorOverride = bullet.getParticleColorOverride();
+                if (colorOverride != -1) {
+                    float r = (colorOverride >> 16 & 0xff) / 255.0F;
+                    float g = (colorOverride >> 8 & 0xff) / 255.0F;
+                    float b = (colorOverride & 0xff) / 255.0F;
+                    result.setColor(r, g, b);
+                }
+                else {
+                    float[] color = ColorHex.colorTextToRbgFloatArray(particle.getColor());
+                    result.setColor(color[0], color[1], color[2]);
+                }
             }
         }
     }

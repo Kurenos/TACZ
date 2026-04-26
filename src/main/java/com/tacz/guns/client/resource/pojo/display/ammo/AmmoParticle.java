@@ -24,7 +24,7 @@ public class AmmoParticle {
     private int count = 1;
 
     @SerializedName("color")
-    private String color = "#FFFFFF";
+    private String color = "";
 
     // 不进行序列化，而是需要 deco 的
     private transient ParticleOptions particleOptions;

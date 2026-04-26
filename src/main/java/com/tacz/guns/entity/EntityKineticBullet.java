@@ -716,6 +716,10 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         }
     }
 
+    public int getParticleColorOverride() {
+        return -1;
+    }
+
     public float getTracerSizeOverride() {
         var pd = getPersistentData();
         return pd.contains(TRACER_SIZE_OVERRIDER_KEY, Tag.TAG_ANY_NUMERIC) ? pd.getFloat(TRACER_SIZE_OVERRIDER_KEY) : 1;
